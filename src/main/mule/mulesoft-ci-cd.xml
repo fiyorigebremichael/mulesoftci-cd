@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="25fa292b-a3c6-4d2d-a482-9dddab151973" >
 		<http:listener-connection host="0.0.0.0" port="8082" />
 	</http:listener-config>
 	<flow name="mulesoft-ci-cdFlow" doc:id="a6113fe5-4889-46d0-873f-14ec1b4b8fdf" >
 		<http:listener doc:name="Listener" doc:id="7167dea5-33eb-40ad-a28c-19ca2d045222" config-ref="HTTP_Listener_config" path="/ci-cdmule"/>
 		<logger level="INFO" doc:name="Logger" doc:id="de8562f4-6e71-410a-bc28-c721c0550cfa" message="start flow"/>
-		<set-payload value='#[output application/json&#10;---&#10;&#10;{&#10;	"message": "deployed seccesfully"&#10;}]' doc:name="Set Payload" doc:id="6f87daf6-e0ff-4350-9bc1-2ea9b073c1e1" />
+		<ee:transform doc:name="Transform Message" doc:id="a3184a8e-015f-4246-b676-344a331ee74f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":"succesfully"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="ec03b83a-16f1-44e6-8de8-69be2744beda" message="flow end!"/>
 	</flow>
 </mule>
